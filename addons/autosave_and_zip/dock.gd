@@ -1,6 +1,8 @@
 @tool
 extends Control
 
+var editor_interface: Object = null
+
 @onready var auto_save_toggle: CheckButton = $ScrollContainer/MarginContainer/VBoxContainer/AutoSaveSection/ToggleHBox/AutoSaveToggle
 @onready var interval_spinbox: SpinBox = $ScrollContainer/MarginContainer/VBoxContainer/AutoSaveSection/IntervalHBox/IntervalSpinBox
 @onready var auto_save_status_label: Label = $ScrollContainer/MarginContainer/VBoxContainer/AutoSaveSection/AutoSaveStatusLabel
@@ -16,6 +18,18 @@ extends Control
 @onready var folder_dialog: FileDialog = $FolderDialog
 @onready var zip_dialog: FileDialog = $ZipDialog
 @onready var confirmation_dialog: AcceptDialog = $ConfirmationDialog
+
+func set_editor_interface(interface: Object) -> void:
+	editor_interface = interface
+
+func _get_active_editor_interface() -> Object:
+	if editor_interface != null:
+		return editor_interface
+	if Engine.has_singleton("EditorInterface"):
+		return Engine.get_singleton("EditorInterface")
+	if has_method("get_editor_interface"):
+		return call("get_editor_interface")
+	return null
 
 func _ready() -> void:
 	if folder_line_edit and folder_line_edit.text.is_empty():
@@ -75,12 +89,14 @@ func _on_interval_value_changed(value: float) -> void:
 
 func _on_auto_save_timer_timeout() -> void:
 	if Engine.is_editor_hint():
-		if EditorInterface.has_method("save_scene"):
-			EditorInterface.save_scene()
-		if EditorInterface.has_method("save_all_scenes"):
-			EditorInterface.save_all_scenes()
-		if EditorInterface.has_method("save_project_data"):
-			EditorInterface.save_project_data()
+		var ei := _get_active_editor_interface()
+		if ei:
+			if ei.has_method("save_scene"):
+				ei.call("save_scene")
+			if ei.has_method("save_all_scenes"):
+				ei.call("save_all_scenes")
+			if ei.has_method("save_project_data"):
+				ei.call("save_project_data")
 
 		var current_time := Time.get_time_string_from_system()
 		auto_save_status_label.text = "Status: Auto-saved at " + current_time
