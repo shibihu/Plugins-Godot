@@ -1,0 +1,158 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://addons/autosave_and_zip/dock.gd" id="1_dock"]
+
+[node name="AutoSaveAndZip" type="Control"]
+custom_minimum_size = Vector2(250, 400)
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_dock")
+
+[node name="AutoSaveTimer" type="Timer" parent="."]
+wait_time = 60.0
+
+[node name="ScrollContainer" type="ScrollContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ScrollContainer/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 12
+
+[node name="TitleLabel" type="Label" parent="ScrollContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "AutoSave & ZIP Exporter"
+horizontal_alignment = 1
+
+[node name="HSeparator1" type="HSeparator" parent="ScrollContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="AutoSaveSection" type="VBoxContainer" parent="ScrollContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="AutoSaveHeader" type="Label" parent="ScrollContainer/MarginContainer/VBoxContainer/AutoSaveSection"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+text = "Auto-Save Settings"
+
+[node name="ToggleHBox" type="HBoxContainer" parent="ScrollContainer/MarginContainer/VBoxContainer/AutoSaveSection"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="ScrollContainer/MarginContainer/VBoxContainer/AutoSaveSection/ToggleHBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Enable Auto-Save:"
+
+[node name="AutoSaveToggle" type="CheckButton" parent="ScrollContainer/MarginContainer/VBoxContainer/AutoSaveSection/ToggleHBox"]
+layout_mode = 2
+
+[node name="IntervalHBox" type="HBoxContainer" parent="ScrollContainer/MarginContainer/VBoxContainer/AutoSaveSection"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="ScrollContainer/MarginContainer/VBoxContainer/AutoSaveSection/IntervalHBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Interval (seconds):"
+
+[node name="IntervalSpinBox" type="SpinBox" parent="ScrollContainer/MarginContainer/VBoxContainer/AutoSaveSection/IntervalHBox"]
+layout_mode = 2
+min_value = 5.0
+max_value = 3600.0
+step = 5.0
+value = 60.0
+
+[node name="AutoSaveStatusLabel" type="Label" parent="ScrollContainer/MarginContainer/VBoxContainer/AutoSaveSection"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.7, 0.7, 1)
+text = "Status: Auto-Save OFF"
+autowrap_mode = 2
+
+[node name="HSeparator2" type="HSeparator" parent="ScrollContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="ZipSection" type="VBoxContainer" parent="ScrollContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="ZipHeader" type="Label" parent="ScrollContainer/MarginContainer/VBoxContainer/ZipSection"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+text = "Project Zip Exporter"
+
+[node name="FolderLabel" type="Label" parent="ScrollContainer/MarginContainer/VBoxContainer/ZipSection"]
+layout_mode = 2
+text = "Project Folder:"
+
+[node name="FolderHBox" type="HBoxContainer" parent="ScrollContainer/MarginContainer/VBoxContainer/ZipSection"]
+layout_mode = 2
+
+[node name="FolderLineEdit" type="LineEdit" parent="ScrollContainer/MarginContainer/VBoxContainer/ZipSection/FolderHBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "res://"
+
+[node name="BrowseFolderButton" type="Button" parent="ScrollContainer/MarginContainer/VBoxContainer/ZipSection/FolderHBox"]
+layout_mode = 2
+text = "Browse..."
+
+[node name="ZipPathLabel" type="Label" parent="ScrollContainer/MarginContainer/VBoxContainer/ZipSection"]
+layout_mode = 2
+text = "Output ZIP Path:"
+
+[node name="ZipPathHBox" type="HBoxContainer" parent="ScrollContainer/MarginContainer/VBoxContainer/ZipSection"]
+layout_mode = 2
+
+[node name="ZipPathLineEdit" type="LineEdit" parent="ScrollContainer/MarginContainer/VBoxContainer/ZipSection/ZipPathHBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="BrowseZipButton" type="Button" parent="ScrollContainer/MarginContainer/VBoxContainer/ZipSection/ZipPathHBox"]
+layout_mode = 2
+text = "Browse..."
+
+[node name="ExtractZipButton" type="Button" parent="ScrollContainer/MarginContainer/VBoxContainer/ZipSection"]
+layout_mode = 2
+text = "Extract to Zip"
+
+[node name="ZipStatusLabel" type="Label" parent="ScrollContainer/MarginContainer/VBoxContainer/ZipSection"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.7, 0.7, 1)
+text = "Ready."
+autowrap_mode = 2
+
+[node name="FolderDialog" type="FileDialog" parent="."]
+title = "Select Project Folder"
+size = Vector2i(600, 400)
+file_mode = 2
+access = 2
+
+[node name="ZipDialog" type="FileDialog" parent="."]
+title = "Select ZIP Save Location"
+size = Vector2i(600, 400)
+file_mode = 4
+filters = PackedStringArray("*.zip ; ZIP Archive")
+access = 2
+
+[node name="ConfirmationDialog" type="AcceptDialog" parent="."]
+title = "Zip Backup Complete"
+size = Vector2i(350, 120)
